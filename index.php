@@ -1,7 +1,7 @@
 <!doctype html>
 <html class="no-js" lang="zxx">
 <head>
-    <title>Online Notes Sharing System | Home Page</title>
+    <title>Online Library Management System | Home Page</title>
    
     
 
@@ -24,7 +24,20 @@
 </head>
 
 <body>
-  <?php include_once('includes/header.php');?>
+  <?php 
+  session_start();
+// Redirect logged-in users based on role
+if (isset($_SESSION['ocasuid'])) { // Check if user is logged in
+    if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
+        header('Location: admin/index.php'); // Logged in admin goes to admin dashboard
+        exit();
+    } else {
+        header('Location: dashboard.php'); // Logged in regular user goes to their dashboard
+        exit();
+    }
+}
+  
+ ?>
     <main>
         <!--? slider Area Start-->
         <section class="slider-area ">
@@ -36,7 +49,7 @@
                             <div class="col-xl-6 col-lg-7 col-md-12">
                                 <div class="hero__caption">
                                     <h1 data-animation="fadeInLeft" data-delay="0.2s">School Of Signal Online learning<br> platform</h1>
-                                    <p data-animation="fadeInLeft" data-delay="0.4s">Share Your Notes Online</p>
+                                    <p data-animation="fadeInLeft" data-delay="0.4s"> Your Online Library</p>
                                     <a href="user/signup.php" class="btn hero-btn" data-animation="fadeInLeft" data-delay="0.7s">Join for Free</a>
                                 </div>
                             </div>

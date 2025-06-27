@@ -14,7 +14,7 @@
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <img class="rounded-circle me-lg-2" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
                             <?php
-$uid=$_SESSION['ocasuid'];
+$uid=$_SESSION['uid'];
 $sql="SELECT * from  tbluser where ID=:uid";
 $query = $dbh -> prepare($sql);
 $query->bindParam(':uid',$uid,PDO::PARAM_STR);

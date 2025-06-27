@@ -2,12 +2,12 @@
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
-if (strlen($_SESSION['ocasuid']==0)) {
+if (strlen($_SESSION['uid']==0)) {
   header('location:logout.php');
   } else{
      if(isset($_POST['submit']))
   {
-    $uid=$_SESSION['ocasuid'];
+    $uid=$_SESSION['uid'];
     
     $fname=$_POST['name'];
   $mobno=$_POST['mobilenumber'];
@@ -69,7 +69,7 @@ $query->execute();
                             <h6 class="mb-4">User Profile</h6>
                             <form method="post">
                                  <?php
-$uid=$_SESSION['ocasuid'];
+$uid=$_SESSION['uid'];
 $sql="SELECT * from tbluser where ID=:uid";
 $query = $dbh -> prepare($sql);
 $query->bindParam(':uid',$uid,PDO::PARAM_STR);

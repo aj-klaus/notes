@@ -1,14 +1,29 @@
 <?php
-session_start();
-error_reporting(0);
+session_start(); // Ensure this is the very first line, no spaces before <?php
+error_reporting(E_ALL); // Change this from 0 to E_ALL for debugging
+ini_set('display_errors', 1); // Enable display of errors
+
 include('includes/dbconnection.php');
-if (strlen($_SESSION['ocasuid']==0)) {
-  header('location:logout.php');
-  } else{
 
+// CORRECTED Authorization Check:
+// Check if $_SESSION['uid'] is NOT set OR if it is empty
+if (!isset($_SESSION['uid']) || empty($_SESSION['uid'])) {
+    echo "DEBUG (dashboard.php): User is NOT logged in or session UID is empty. Redirecting to logout.<br>"; // Added debug
+    header('location:logout.php'); // This will execute if not logged in
+    exit();
+} else {
+    // User is logged in, now optionally check their role if only 'user' role should access this dashboard
+    // We expect $_SESSION['role'] to be 'user' here for this dashboard.
+    if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'user') {
+        echo "DEBUG (dashboard.php): User has incorrect role (" . htmlspecialchars($_SESSION['role'] ?? 'N/A') . "). Redirecting to logout.<br>"; // Added debug
+        header('location:logout.php'); // Redirect if role is not 'user'
+        exit();
+    }
+    
+    // If execution reaches here, the user is logged in AND has the 'user' role
 
-
-  ?>
+// The 'else' brace for the outer if statement starts here.
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,7 +62,7 @@ if (strlen($_SESSION['ocasuid']==0)) {
                 <div class="bg-light text-center rounded p-4">
                     <div class="d-flex align-items-center justify-content-between mb-4">
                         <?php
-$uid=$_SESSION['ocasuid'];
+$uid=$_SESSION['uid'];
 $sql="SELECT * from  tbluser where ID=:uid";
 $query = $dbh -> prepare($sql);
 $query->bindParam(':uid',$uid,PDO::PARAM_STR);
@@ -73,7 +88,7 @@ foreach($results as $row)
                             <div class="ms-3">
                                 <p class="mb-2">Total Uploaded Subject Notes</p>
                                  <?php 
-                                 $uid=$_SESSION['ocasuid'];
+                                 $uid=$_SESSION['uid'];
 $sql1 ="SELECT * from  tblnotes where UserID=:uid";
 $query1 = $dbh -> prepare($sql1);
 $query1->bindParam(':uid',$uid,PDO::PARAM_STR);
@@ -93,7 +108,7 @@ $totnotes=$query1->rowCount();
                             <div class="ms-3">
                                 <p class="mb-2">Total Uploaded Notes File</p>
                                  <?php 
-                                 $uid=$_SESSION['ocasuid'];
+                                 $uid=$_SESSION['uid'];
 $sql1 ="SELECT 
 COUNT(IF(File1!= '',0,NULL)) as file,
 COUNT(IF(File2!= '',0,NULL)) as file2,

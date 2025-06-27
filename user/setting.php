@@ -3,7 +3,7 @@ session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
 error_reporting(0);
-if (strlen($_SESSION['ocasuid']==0)) {
+if (strlen($_SESSION['uid']==0)) {
   header('location:logout.php');
   } else{
 if(isset($_POST['submit']))
